@@ -1,8 +1,8 @@
 version: '3.8'
 
 services:
-  mysqldb:
-    image: mysql:5.7
+  mariadb:
+    image: mariadb
     restart: unless-stopped
     env_file: ./.env
     environment:
@@ -11,17 +11,17 @@ services:
     ports:
       - $MYSQLDB_LOCAL_PORT:$MYSQLDB_DOCKER_PORT
     volumes:
-      - db:/var/lib/mysql
+      - db:/var/lib/mariadb
   app:
     depends_on:
-      - mysqldb
+      - mariadb 
     build: ./hubbackend
     restart: unless-stopped
     env_file: ./.env
     ports:
       - $NODE_LOCAL_PORT:$NODE_DOCKER_PORT
     environment:
-      - DB_HOST=mysqldb
+      - DB_HOST=mariadb
       - DB_USER=$MYSQLDB_USER
       - DB_PASSWORD=$MYSQLDB_ROOT_PASSWORD
       - DB_NAME=$MYSQLDB_DATABASE
